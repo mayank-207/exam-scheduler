@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { ScheduleStrategy } from '../../types';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '../ui/Card';
-import Button from '../ui/Button';
+import {Button} from '../ui/Button';
 import { Calendar, RefreshCw, BookOpen, Clock, User, ChevronRight, AlertCircle } from 'lucide-react';
 import { formatDateDisplay, formatTimeRange } from '../../utils/timeUtils';
 
@@ -240,3 +240,92 @@ const ScheduleView: React.FC = () => {
 };
 
 export default ScheduleView;
+
+// Today's schedule card with primary border
+const TodayScheduleCard = ({ entries }) => {
+  const today = new Date().toISOString().split('T')[0];
+  const todayEntries = entries.filter(entry => entry.date.startsWith(today));
+  
+  return (
+    <Card className="mb-6 border-l-4 border-l-primary shadow-md">
+      <CardHeader className="bg-secondary/50">
+        <div className="flex justify-between items-center">
+          <CardTitle className="flex items-center">
+            <Calendar className="mr-2 h-5 w-5 text-primary" />
+            Today's Schedule
+          </CardTitle>
+          <span className="text-sm font-medium text-gray-500">
+            {formatDateDisplay(today)}
+          </span>
+        </div>
+      </CardHeader>
+      <CardContent className="divide-y divide-gray-100">
+        {todayEntries.length > 0 ? (
+          todayEntries.map(entry => (
+            <ScheduleEntryItem key={entry.id} entry={entry} />
+          ))
+        ) : (
+          <div className="py-6 text-center text-gray-500">
+            <Calendar className="h-12 w-12 mx-auto mb-2 text-gray-400" />
+            <p>No study sessions scheduled for today</p>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+};
+
+// Timeline entry with subject color coding
+const ScheduleEntryItem = ({ entry }) => {
+  const { subject, topic } = getTopicDetails(entry.subjectId, entry.topicId);
+  if (!subject || !topic) return null;
+  
+  // Subject color mapping based on difficulty
+  const subjectColors = {
+    easy: 'bg-green-100 border-green-300 text-green-800',
+    medium: 'bg-yellow-100 border-yellow-300 text-yellow-800',
+    hard: 'bg-red-100 border-red-300 text-red-800'
+  };
+  
+  return (
+    <div className="py-4 flex items-start space-x-4">
+      <div className="flex-shrink-0 w-20 text-sm font-medium text-gray-500">
+        {formatTimeRange(entry.timeSlot)}
+      </div>
+      
+      <div className={`flex-1 p-4 rounded-xl border ${subjectColors[subject.difficulty]}`}>
+        <div className="flex justify-between items-start mb-2">
+          <div>
+            <h4 className="font-medium text-gray-900">{topic.name}</h4>
+            <p className="text-sm">{subject.name}</p>
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <span className="text-xs px-2 py-1 bg-white bg-opacity-50 rounded-full">
+              {Math.round(topic.estimatedTimeMinutes / 60 * 10) / 10}h
+            </span>
+            
+            <button 
+              className={`w-6 h-6 rounded-full flex items-center justify-center transition-colors ${topic.completed ? 'bg-success text-white' : 'bg-white border border-gray-300'}`}
+              onClick={() => markTopicCompleted(subject.id, topic.id, !topic.completed)}
+            >
+              {topic.completed && <CheckIcon className="w-4 h-4" />}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Regenerate button with glow effect
+const RegenerateButton = ({ onClick }) => (
+  <Button
+    variant="primary"
+    onClick={onClick}
+    icon={<RefreshCw className="h-4 w-4" />}
+    className="btn-glow bg-primary hover:bg-primary/90"
+  >
+    Regenerate Schedule
+  </Button>
+);

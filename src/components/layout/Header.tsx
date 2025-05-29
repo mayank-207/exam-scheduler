@@ -3,8 +3,8 @@ import { useAppContext } from '../../context/AppContext';
 import { useTheme } from '../../context/ThemeContext';
 import { formatDateDisplay } from '../../utils/timeUtils';
 import { Calendar, BookOpen, Clock, Sun, Moon } from 'lucide-react';
-import ProgressBar from '../ui/ProgressBar';
-import Button from '../ui/Button';
+import { Progress } from '../ui/progress';
+import { Button } from '../ui/button';
 
 const Header: React.FC = () => {
   const { userProfile, isProfileComplete, getOverallProgress } = useAppContext();
@@ -28,7 +28,7 @@ const Header: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
           <div className="flex items-center mb-4 md:mb-0">
             <BookOpen className="h-8 w-8 mr-3 text-primary" />
-            <h1 className="text-2xl font-bold">Mamlatdar Exam Prep</h1>
+            <h1 className="text-2xl font-bold">Exam Preparation</h1>
             <Button
               variant="ghost"
               size="icon"
@@ -60,14 +60,13 @@ const Header: React.FC = () => {
               
               <div className="bg-accent/50 rounded-lg p-3">
                 <p className="text-xs text-muted-foreground mb-1">Overall Progress</p>
-                <ProgressBar 
-                  value={progress.completed} 
-                  max={progress.total} 
-                  showPercentage={true}
-                  size="sm"
-                  variant={progress.percentage > 75 ? 'success' : progress.percentage > 40 ? 'default' : 'warning'}
+                <Progress 
+                  value={progress.percentage} 
+                  max={100} 
                   className="w-full"
+                  variant={progress.percentage > 75 ? 'success' : progress.percentage > 40 ? 'default' : 'warning'}
                 />
+                <p className="text-xs mt-1 text-right">{progress.percentage}%</p>
               </div>
             </div>
           ) : (
