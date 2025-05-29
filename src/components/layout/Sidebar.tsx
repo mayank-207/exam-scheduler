@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { UserSquare, BookOpen, Calendar, BarChart } from 'lucide-react';
-import { Button } from '../ui/button';
+import { Button } from '../ui/Button';
 
 interface SidebarProps {
   activeTab: string;
