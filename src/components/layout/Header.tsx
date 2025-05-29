@@ -4,7 +4,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { formatDateDisplay } from '../../utils/timeUtils';
 import { Calendar, BookOpen, Clock, Sun, Moon } from 'lucide-react';
 import { Progress } from '../ui/progress';
-import { Button } from '../ui/button';
+import { Button } from '../ui/Button';
 
 const Header: React.FC = () => {
   const { userProfile, isProfileComplete, getOverallProgress } = useAppContext();

@@ -14,8 +14,6 @@ const SubjectsManager: React.FC = () => {
     addSubject, 
     updateSubject, 
     deleteSubject,
-    addTopic,
-    updateTopic,
     deleteTopic,
     markTopicCompleted,
     getSubjectProgress
@@ -37,7 +35,7 @@ const SubjectsManager: React.FC = () => {
   
   // State for edit mode
   const [editingSubjectId, setEditingSubjectId] = useState<string | null>(null);
-  const [editingTopicId, setEditingTopicId] = useState<string | null>(null);
+  const [ setEditingTopicId] = useState<string | null>(null);
   
   // State for active subject (expanded)
   const [activeSubjectId, setActiveSubjectId] = useState<string | null>(null);
@@ -141,7 +139,7 @@ const SubjectsManager: React.FC = () => {
       notes: topic.notes || '',
       subjectId: subject.id
     });
-    setEditingTopicId(topic.id);
+    // setEditingTopicId(topic.id);
   };
   
   // Get difficulty color
@@ -190,11 +188,11 @@ const SubjectsManager: React.FC = () => {
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Input
-                label="Subject Name"
+                // label="Subject Name"
                 placeholder="e.g., Mathematics"
                 value={newSubject.name}
                 onChange={(e) => setNewSubject({ ...newSubject, name: e.target.value })}
-                fullWidth
+                // fullWidth
               />
               
               <Select
