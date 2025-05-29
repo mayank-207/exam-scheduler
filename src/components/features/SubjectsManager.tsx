@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { Subject, Topic, DifficultyLevel } from '../../types';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card';
-import Button from '../ui/Button';
-import Input from '../ui/Input';
-import Select from '../ui/Select';
-import { PlusCircle, Edit, Trash2, BookOpen, Clock, CheckCircle, XCircle } from 'lucide-react';
+import {Input} from '../ui/Input';
+import { Select } from '../ui/Select';
+import { Button } from '../ui/Button';
+import { PlusCircle, Edit, Trash2, BookOpen, Clock, CheckCircle, XCircle, ChevronDown } from 'lucide-react';
 import ProgressBar from '../ui/ProgressBar';
 
 const SubjectsManager: React.FC = () => {
@@ -87,51 +87,51 @@ const SubjectsManager: React.FC = () => {
     setEditingSubjectId(subject.id);
   };
   
-  // Handle adding new topic
-  const handleAddTopic = () => {
-    if (!newTopic.name.trim() || !newTopic.subjectId) return;
+  // // Handle adding new topic
+  // const handleAddTopic = () => {
+  //   if (!newTopic.name.trim() || !newTopic.subjectId) return;
     
-    addTopic(newTopic.subjectId, {
-      name: newTopic.name,
-      estimatedTimeMinutes: newTopic.estimatedTimeMinutes,
-      notes: newTopic.notes
-    });
+  //   addTopic(newTopic.subjectId, {
+  //     name: newTopic.name,
+  //     estimatedTimeMinutes: newTopic.estimatedTimeMinutes,
+  //     notes: newTopic.notes
+  //   });
     
-    // Reset form
-    setNewTopic({
-      name: '',
-      estimatedTimeMinutes: 60,
-      notes: '',
-      subjectId: newTopic.subjectId
-    });
-  };
+  //   // Reset form
+  //   setNewTopic({
+  //     name: '',
+  //     estimatedTimeMinutes: 60,
+  //     notes: '',
+  //     subjectId: newTopic.subjectId
+  //   });
+  // };
   
-  // Handle updating topic
-  const handleUpdateTopic = () => {
-    if (!editingTopicId || !newTopic.subjectId) return;
+  // // Handle updating topic
+  // const handleUpdateTopic = () => {
+  //   if (!editingTopicId || !newTopic.subjectId) return;
     
-    const subject = subjects.find(s => s.id === newTopic.subjectId);
-    if (!subject) return;
+  //   const subject = subjects.find(s => s.id === newTopic.subjectId);
+  //   if (!subject) return;
     
-    const topic = subject.topics.find(t => t.id === editingTopicId);
-    if (!topic) return;
+  //   const topic = subject.topics.find(t => t.id === editingTopicId);
+  //   if (!topic) return;
     
-    updateTopic(newTopic.subjectId, {
-      ...topic,
-      name: newTopic.name || topic.name,
-      estimatedTimeMinutes: newTopic.estimatedTimeMinutes || topic.estimatedTimeMinutes,
-      notes: newTopic.notes !== undefined ? newTopic.notes : topic.notes
-    });
+  //   updateTopic(newTopic.subjectId, {
+  //     ...topic,
+  //     name: newTopic.name || topic.name,
+  //     estimatedTimeMinutes: newTopic.estimatedTimeMinutes || topic.estimatedTimeMinutes,
+  //     notes: newTopic.notes !== undefined ? newTopic.notes : topic.notes
+  //   });
     
-    // Reset form and edit mode
-    setNewTopic({
-      name: '',
-      estimatedTimeMinutes: 60,
-      notes: '',
-      subjectId: ''
-    });
-    setEditingTopicId(null);
-  };
+  //   // Reset form and edit mode
+  //   setNewTopic({
+  //     name: '',
+  //     estimatedTimeMinutes: 60,
+  //     notes: '',
+  //     subjectId: ''
+  //   });
+  //   setEditingTopicId(null);
+  // };
   
   // Enter topic edit mode
   const handleEditTopic = (subject: Subject, topic: Topic) => {
@@ -257,243 +257,114 @@ const SubjectsManager: React.FC = () => {
         ) : (
           <div className="space-y-4">
             {subjects.map((subject) => {
+              const isActive = activeSubjectId === subject.id;
               const progress = getSubjectProgress(subject.id);
               
               return (
-                <Card key={subject.id} className="overflow-visible">
-                  <div className="p-4 flex flex-col sm:flex-row sm:items-center justify-between border-b border-gray-200">
-                    <div className="flex items-center space-x-3 mb-3 sm:mb-0">
-                      <div className="flex-shrink-0">
-                        <div className="p-2 bg-blue-100 rounded-full">
-                          <BookOpen className="h-5 w-5 text-blue-600" />
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <h4 className="font-semibold text-gray-800">{subject.name}</h4>
-                        <div className="flex items-center mt-1">
-                          <span className={`text-xs px-2 py-0.5 rounded-full border ${getDifficultyColor(subject.difficulty)}`}>
-                            {subject.difficulty}
-                          </span>
-                          <span className="text-xs text-gray-500 ml-2">
-                            {subject.topics.length} topics
-                          </span>
-                        </div>
-                      </div>
+                <Card key={subject.id} className="mb-4 overflow-hidden card-hover border border-gray-100">
+                  <div 
+                    className="px-6 py-4 flex items-center justify-between cursor-pointer"
+                    onClick={() => setActiveSubjectId(isActive ? null : subject.id)}
+                  >
+                    <div className="flex items-center space-x-3">
+                      <BookOpen className="h-5 w-5 text-primary" />
+                      <h3 className="font-semibold text-lg">{subject.name}</h3>
+                      <span className={`text-xs px-2 py-1 rounded-full border ${getDifficultyColor(subject.difficulty)}`}>
+                        {subject.difficulty.charAt(0).toUpperCase() + subject.difficulty.slice(1)}
+                      </span>
                     </div>
                     
-                    <div className="flex flex-col sm:flex-row items-end sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setActiveSubjectId(activeSubjectId === subject.id ? null : subject.id)}
-                      >
-                        {activeSubjectId === subject.id ? 'Hide Topics' : 'Show Topics'}
-                      </Button>
+                    <div className="flex items-center space-x-4">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-sm text-gray-600">{progress.completed}/{progress.total} topics</span>
+                        <ProgressBar 
+                          value={progress.completed} 
+                          max={progress.total} 
+                          size="sm" 
+                          color="primary" 
+                          className="w-24" 
+                        />
+                      </div>
                       
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        icon={<Edit size={14} />}
-                        onClick={() => handleEditSubject(subject)}
+                      <button 
+                        onClick={(e) => { 
+                          e.stopPropagation();
+                          handleEditSubject(subject);
+                        }}
+                        className="p-1 text-gray-500 hover:text-primary transition-colors"
                       >
-                        Edit
-                      </Button>
+                        <Edit size={16} />
+                      </button>
                       
-                      <Button
-                        variant="danger"
-                        size="sm"
-                        icon={<Trash2 size={14} />}
-                        onClick={() => deleteSubject(subject.id)}
+                      <button 
+                        onClick={(e) => { 
+                          e.stopPropagation();
+                          deleteSubject(subject.id);
+                        }}
+                        className="p-1 text-gray-500 hover:text-red-600 transition-colors"
                       >
-                        Delete
-                      </Button>
+                        <Trash2 size={16} />
+                      </button>
+                      
+                      <ChevronDown 
+                        className={`h-5 w-5 text-gray-500 transition-transform duration-200 ${isActive ? 'transform rotate-180' : ''}`} 
+                      />
                     </div>
                   </div>
                   
-                  {/* Progress bar */}
-                  <div className="px-4 py-2 bg-gray-50">
-                    <ProgressBar
-                      value={progress.completed}
-                      max={progress.total}
-                      label={`Progress: ${progress.completed}/${progress.total} topics`}
-                      showPercentage={true}
-                      size="sm"
-                    />
-                  </div>
-                  
-                  {/* Topics section (expandable) */}
-                  {activeSubjectId === subject.id && (
-                    <div className="p-4 bg-gray-50">
-                      {/* Add topic form */}
-                      {editingTopicId ? (
-                        <div className="mb-6 p-4 bg-white rounded-md shadow-sm">
-                          <h5 className="font-medium text-gray-700 mb-3">Edit Topic</h5>
-                          <div className="space-y-4">
-                            <Input
-                              label="Topic Name"
-                              placeholder="e.g., Algebra Basics"
-                              value={newTopic.name}
-                              onChange={(e) => setNewTopic({ ...newTopic, name: e.target.value })}
-                              fullWidth
-                            />
-                            
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <Input
-                                label="Estimated Time (minutes)"
-                                type="number"
-                                min="1"
-                                value={newTopic.estimatedTimeMinutes}
-                                onChange={(e) => setNewTopic({ ...newTopic, estimatedTimeMinutes: parseInt(e.target.value) })}
-                                fullWidth
-                              />
-                            </div>
-                            
-                            <Input
-                              label="Notes (optional)"
-                              placeholder="Any additional information"
-                              value={newTopic.notes}
-                              onChange={(e) => setNewTopic({ ...newTopic, notes: e.target.value })}
-                              fullWidth
-                            />
-                            
-                            <div className="flex justify-end space-x-2">
-                              <Button 
-                                variant="outline" 
-                                onClick={() => {
-                                  setEditingTopicId(null);
-                                  setNewTopic({ name: '', estimatedTimeMinutes: 60, notes: '', subjectId: '' });
-                                }}
-                              >
-                                Cancel
-                              </Button>
-                              <Button 
-                                variant="primary" 
-                                icon={<Edit size={16} />}
-                                onClick={handleUpdateTopic}
-                              >
-                                Update Topic
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="mb-6 p-4 bg-white rounded-md shadow-sm">
-                          <h5 className="font-medium text-gray-700 mb-3">Add New Topic</h5>
-                          <div className="space-y-4">
-                            <Input
-                              label="Topic Name"
-                              placeholder="e.g., Algebra Basics"
-                              value={newTopic.name}
-                              onChange={(e) => setNewTopic({ ...newTopic, name: e.target.value, subjectId: subject.id })}
-                              fullWidth
-                            />
-                            
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              <Input
-                                label="Estimated Time (minutes)"
-                                type="number"
-                                min="1"
-                                value={newTopic.estimatedTimeMinutes}
-                                onChange={(e) => setNewTopic({ ...newTopic, estimatedTimeMinutes: parseInt(e.target.value), subjectId: subject.id })}
-                                fullWidth
-                              />
-                            </div>
-                            
-                            <Input
-                              label="Notes (optional)"
-                              placeholder="Any additional information"
-                              value={newTopic.notes}
-                              onChange={(e) => setNewTopic({ ...newTopic, notes: e.target.value, subjectId: subject.id })}
-                              fullWidth
-                            />
-                            
-                            <div className="flex justify-end">
-                              <Button 
-                                variant="primary" 
-                                icon={<PlusCircle size={16} />}
-                                onClick={handleAddTopic}
-                                disabled={!newTopic.name.trim()}
-                              >
-                                Add Topic
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                      
+                  {isActive && (
+                    <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
                       {/* Topics list */}
-                      {subject.topics.length === 0 ? (
-                        <div className="text-center py-4 text-gray-500">
-                          No topics added yet
-                        </div>
-                      ) : (
-                        <div className="space-y-2">
-                          {subject.topics.map((topic) => (
-                            <div 
-                              key={topic.id} 
-                              className={`p-3 rounded-md border ${topic.completed ? 'bg-green-50 border-green-200' : 'bg-white border-gray-200'}`}
+                      {subject.topics.map((topic) => (
+                        <div key={topic.id} className="flex items-center justify-between py-2">
+                          <div className="flex items-center space-x-3">
+                            <h4 className="font-medium">{topic.name}</h4>
+                            <span className="text-sm text-gray-600">
+                              <Clock className="h-4 w-4 inline mr-1" />
+                              {formatTime(topic.estimatedTimeMinutes)}
+                            </span>
+                          </div>
+                          
+                          <div className="flex items-center space-x-2">
+                            <button
+                              onClick={() => markTopicCompleted(subject.id, topic.id, !topic.completed)}
+                              className={`p-1 ${topic.completed ? 'text-green-500' : 'text-gray-400'}`}
                             >
-                              <div className="flex items-start justify-between">
-                                <div className="flex items-start space-x-3">
-                                  <div className="mt-0.5">
-                                    {topic.completed ? (
-                                      <CheckCircle className="h-5 w-5 text-green-600" />
-                                    ) : (
-                                      <Clock className="h-5 w-5 text-blue-600" />
-                                    )}
-                                  </div>
-                                  
-                                  <div>
-                                    <div className="flex items-center">
-                                      <h6 className={`font-medium ${topic.completed ? 'text-green-800' : 'text-gray-800'}`}>
-                                        {topic.name}
-                                      </h6>
-                                    </div>
-                                    <p className="text-sm text-gray-600 mt-1">
-                                      Estimated time: {formatTime(topic.estimatedTimeMinutes)}
-                                    </p>
-                                    {topic.notes && (
-                                      <p className="text-xs text-gray-500 mt-1">
-                                        {topic.notes}
-                                      </p>
-                                    )}
-                                  </div>
-                                </div>
-                                
-                                <div className="flex space-x-2">
-                                  <Button
-                                    variant={topic.completed ? 'outline' : 'success'}
-                                    size="sm"
-                                    icon={topic.completed ? <XCircle size={14} /> : <CheckCircle size={14} />}
-                                    onClick={() => markTopicCompleted(subject.id, topic.id, !topic.completed)}
-                                  >
-                                    {topic.completed ? 'Mark Incomplete' : 'Mark Complete'}
-                                  </Button>
-                                  
-                                  <Button
-                                    variant="outline"
-                                    size="sm"
-                                    icon={<Edit size={14} />}
-                                    onClick={() => handleEditTopic(subject, topic)}
-                                  >
-                                    Edit
-                                  </Button>
-                                  
-                                  <Button
-                                    variant="danger"
-                                    size="sm"
-                                    icon={<Trash2 size={14} />}
-                                    onClick={() => deleteTopic(subject.id, topic.id)}
-                                  >
-                                    Delete
-                                  </Button>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
+                              {topic.completed ? <CheckCircle size={16} /> : <XCircle size={16} />}
+                            </button>
+                            
+                            <button 
+                              onClick={() => handleEditTopic(subject, topic)}
+                              className="p-1 text-gray-500 hover:text-primary"
+                            >
+                              <Edit size={16} />
+                            </button>
+                            
+                            <button 
+                              onClick={() => deleteTopic(subject.id, topic.id)}
+                              className="p-1 text-gray-500 hover:text-red-600"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
                         </div>
-                      )}
+                      ))}
+                      
+                      {/* Add topic button */}
+                      <Button
+                        variant="outline"
+                        className="mt-4 w-full"
+                        icon={<PlusCircle size={16} />}
+                        onClick={() => {
+                          setNewTopic({
+                            ...newTopic,
+                            subjectId: subject.id
+                          });
+                          // TODO: Open topic modal
+                        }}
+                      >
+                        Add Topic
+                      </Button>
                     </div>
                   )}
                 </Card>

@@ -244,4 +244,99 @@ const ProgressTracker: React.FC = () => {
   );
 };
 
+// Circular progress indicator
+const CircularProgress = ({ value, max, label, size = 120 }) => {
+  const percentage = Math.min(Math.round((value / max) * 100), 100);
+  const radius = 50;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - (percentage / 100) * circumference;
+  
+  return (
+    <div className="flex flex-col items-center justify-center">
+      <div className="relative" style={{ width: size, height: size }}>
+        <svg width={size} height={size} viewBox="0 0 120 120">
+          {/* Background circle */}
+          <circle
+            cx="60"
+            cy="60"
+            r={radius}
+            fill="none"
+            stroke="#e6e6e6"
+            strokeWidth="10"
+          />
+          {/* Progress circle */}
+          <circle
+            cx="60"
+            cy="60"
+            r={radius}
+            fill="none"
+            stroke="#d6001c"
+            strokeWidth="10"
+            strokeDasharray={circumference}
+            strokeDashoffset={strokeDashoffset}
+            strokeLinecap="round"
+            transform="rotate(-90 60 60)"
+            className="transition-all duration-700 ease-out"
+          />
+          {/* Percentage text */}
+          <text
+            x="60"
+            y="60"
+            textAnchor="middle"
+            dominantBaseline="middle"
+            className="font-bold text-2xl"
+            fill="#333"
+          >
+            {percentage}%
+          </text>
+        </svg>
+      </div>
+      <span className="mt-2 text-sm font-medium text-gray-700">{label}</span>
+    </div>
+  );
+};
+
+// Subject progress cards with clean design
+const SubjectProgressCard = ({ subject }) => {
+  const progress = getSubjectProgress(subject.id);
+  const percentage = Math.round((progress.completed / progress.total) * 100) || 0;
+  
+  return (
+    <Card className="overflow-hidden card-hover">
+      <CardContent className="p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-semibold text-gray-800">{subject.name}</h3>
+          <span className={`text-xs px-2 py-1 rounded-full ${getDifficultyBadgeClass(subject.difficulty)}`}>
+            {subject.difficulty}
+          </span>
+        </div>
+        
+        <div className="flex items-center justify-between">
+          <CircularProgress 
+            value={progress.completed} 
+            max={progress.total} 
+            label="Completed"
+            size={100}
+          />
+          
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">Topics:</span>
+              <span className="font-medium">{progress.completed}/{progress.total}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">Est. Time:</span>
+              <span className="font-medium">{Math.round(progress.totalTimeMinutes / 60)}h</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">Remaining:</span>
+              <span className="font-medium">{Math.round((progress.totalTimeMinutes - progress.completedTimeMinutes) / 60)}h</span>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
 export default ProgressTracker;

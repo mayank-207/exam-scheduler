@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import { UserProfile, WeekDay, StudyIntensity } from '../../types';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '../ui/Card';
-import Input from '../ui/Input';
-import Select from '../ui/Select';
-import Button from '../ui/Button';
+import {Input} from '../ui/Input';
+import {Select} from '../ui/Select';
+import {Button} from '../ui/Button';
 import { Save, Clock, Calendar } from 'lucide-react';
 
 const ProfileSetup: React.FC = () => {
@@ -196,3 +196,54 @@ const ProfileSetup: React.FC = () => {
 };
 
 export default ProfileSetup;
+
+// Stepper component for the onboarding process
+const StepIndicator = ({ currentStep, totalSteps }: { currentStep: number, totalSteps: number }) => {
+  return (
+    <div className="flex items-center justify-center mb-8">
+      {Array.from({ length: totalSteps }).map((_, index) => (
+        <React.Fragment key={index}>
+          <div className="flex flex-col items-center">
+            <div 
+              className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${index < currentStep ? 'bg-primary text-white' : index === currentStep ? 'bg-primary text-white ring-4 ring-primary/20' : 'bg-secondary text-gray-500'}`}
+            >
+              {index < currentStep ? (
+                <CheckIcon className="w-5 h-5" />
+              ) : (
+                <span>{index + 1}</span>
+              )}
+            </div>
+            <span className="text-xs mt-2 font-medium text-gray-600">
+              {index === 0 ? 'Basic Info' : index === 1 ? 'Study Time' : 'Review'}
+            </span>
+          </div>
+          {index < totalSteps - 1 && (
+            <div 
+              className={`h-1 w-16 mx-2 rounded ${index < currentStep ? 'bg-primary' : 'bg-secondary'}`}
+            />
+          )}
+        </React.Fragment>
+      ))}
+    </div>
+  );
+};
+
+// Enhanced input field with icon and better styling
+const EnhancedInput = ({ icon, label, ...props }: { icon?: React.ReactNode, label: string } & React.InputHTMLAttributes<HTMLInputElement>) => {
+  return (
+    <div className="mb-4">
+      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      <div className="relative rounded-xl">
+        {icon && (
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+            {icon}
+          </div>
+        )}
+        <input
+          className={`w-full px-4 py-3 ${icon ? 'pl-10' : ''} bg-white border border-gray-300 rounded-xl shadow-sm placeholder-gray-400 focus:outline-none input-focus text-base`}
+          {...props}
+        />
+      </div>
+    </div>
+  );
+};

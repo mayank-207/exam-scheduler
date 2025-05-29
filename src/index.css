@@ -4,52 +4,88 @@
 
 @layer base {
   :root {
+    /* Primary Red */
+    --primary: 350 100% 42%;
+    --primary-foreground: 0 0% 100%;
+    
+    /* Secondary Light Gray */
+    --secondary: 220 5% 94%;
+    --secondary-foreground: 220 10% 20%;
+    
+    /* Text Colors */
+    --foreground: 0 0% 20%;
+    --muted: 220 5% 90%;
+    --muted-foreground: 0 0% 40%;
+    
+    /* Success Green */
+    --success: 142 70% 45%;
+    --success-foreground: 0 0% 100%;
+    
+    /* Destructive Red */
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 100%;
+    
+    /* Background & Card Colors */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --success: 142.1 76.2% 36.3%;
-    --success-foreground: 355.7 100% 97.3%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-    --radius: 0.5rem;
+    --card-foreground: 0 0% 20%;
+    
+    /* Other UI Elements */
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 350 100% 42%;
+    --radius: 0.75rem;
+    
+    /* Accent */
+    --accent: 220 5% 96%;
+    --accent-foreground: 220 10% 20%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --success: 142.1 70.6% 45.3%;
-    --success-foreground: 144.9 80.4% 10%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --background: 220 20% 10%;
+    --foreground: 0 0% 95%;
+    --card: 220 20% 13%;
+    --card-foreground: 0 0% 95%;
+    --primary: 350 90% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 10% 20%;
+    --secondary-foreground: 0 0% 90%;
+    --muted: 220 10% 15%;
+    --muted-foreground: 220 10% 70%;
+    --success: 142 70% 40%;
+    --success-foreground: 0 0% 100%;
+    --destructive: 0 90% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 15% 20%;
+    --input: 220 15% 20%;
+    --accent: 220 10% 15%;
+    --accent-foreground: 220 10% 90%;
+  }
+}
+
+/* Global Font Settings */
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', system-ui, sans-serif;
+  }
+}
+
+/* Custom Component Styles */
+@layer components {
+  .card-hover {
+    @apply transition-all duration-200 hover:shadow-md;
+  }
+  
+  .input-focus {
+    @apply focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-200;
+  }
+  
+  .btn-glow {
+    @apply hover:shadow-[0_0_15px_rgba(214,0,28,0.5)] transition-all duration-300;
   }
 }
 
